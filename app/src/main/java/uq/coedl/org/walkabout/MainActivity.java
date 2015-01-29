@@ -9,6 +9,7 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
 
     public static final String TEST_STRING = "BLAH";
+    public static final String TEST_STRING2 = "BLAHBLAH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
