@@ -5,5 +5,5 @@ package uq.coedl.org.walkabout;
  */
 public interface DirectionCalculator
 {
-    DirectionalReference directionBetween(final Location fromLocation, final Location toLocation);
+    DirectionalReference directionBetween(final LocationInterface fromLocationInterface, final LocationInterface toLocationInterface);
 }

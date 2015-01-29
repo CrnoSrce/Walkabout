@@ -10,33 +10,39 @@ public class GameManager
     private DataSource dataSource = null;
     private State state = State.UNINITIALISED;
     private int currentWaypointIndex = 0;
-    private DirectionCalculator directionCalculator;
+    private DirectionCalculator directionCalculator = null;
 
     public GameManager()
     {
     }
 
-    public void initialise(DataSource dataSource)
+    public void initialise(final DataSource dataSource, final DirectionCalculator directionCalculator)
     {
         this.dataSource = dataSource;
+        this.directionCalculator = directionCalculator;
         state = State.READY;
     }
 
-    public DirectionalReference updateDirectionalReference(final Location currentLocation)
+    public DirectionalReference updateDirectionalReference(final LocationInterface currentLocationInterface)
     {
-        final Location currentWaypoint = dataSource.getWaypoint(currentWaypointIndex);
-        return directionCalculator.directionBetween(currentLocation, currentWaypoint);
+        final LocationInterface currentWaypoint = dataSource.getWaypoint(currentWaypointIndex);
+        return directionCalculator.directionBetween(currentLocationInterface, currentWaypoint);
     }
 
     public void gotoNextWaypoint()
     {
-        if(ready())
+        if(isReady())
         {
             currentWaypointIndex = Math.min(currentWaypointIndex + 1, dataSource.getNumWaypoints());
         }
     }
 
-    private boolean ready()
+    public boolean isInitialised()
+    {
+        return state != State.UNINITIALISED;
+    }
+
+    private boolean isReady()
     {
         return state == State.READY;
     }
