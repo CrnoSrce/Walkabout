@@ -9,7 +9,8 @@ public class GameManager
 
     private DataSource dataSource = null;
     private State state = State.UNINITIALISED;
-    private int current;
+    private int currentWaypointIndex = 0;
+    private DirectionCalculator directionCalculator;
 
     public GameManager()
     {
@@ -19,6 +20,25 @@ public class GameManager
     {
         this.dataSource = dataSource;
         state = State.READY;
+    }
+
+    public DirectionalReference updateDirectionalReference(final Location currentLocation)
+    {
+        final Location currentWaypoint = dataSource.getWaypoint(currentWaypointIndex);
+        return directionCalculator.directionBetween(currentLocation, currentWaypoint);
+    }
+
+    public void gotoNextWaypoint()
+    {
+        if(ready())
+        {
+            currentWaypointIndex = Math.min(currentWaypointIndex + 1, dataSource.getNumWaypoints());
+        }
+    }
+
+    private boolean ready()
+    {
+        return state == State.READY;
     }
 
     public State getState()

@@ -5,4 +5,6 @@ package uq.coedl.org.walkabout;
  */
 public interface DataSource
 {
+    public int getNumWaypoints();
+    public Location getWaypoint(final int waypointIndex);
 }
