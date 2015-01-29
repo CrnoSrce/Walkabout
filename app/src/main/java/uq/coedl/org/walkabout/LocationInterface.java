@@ -5,6 +5,13 @@ package uq.coedl.org.walkabout;
  */
 public interface LocationInterface
 {
-    public double getX();
-    public double getY();
+    /**
+     * @return null if location not available, else double representing X coord e.g. longitude
+     */
+    public Double getX();
+
+    /**
+     * @return null if location not available, else double representing Y coord e.g. latitude
+     */
+    public Double getY();
 }
