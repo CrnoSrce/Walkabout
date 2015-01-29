@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import uq.coedl.org.walkabout.GameManager;
+import uq.coedl.org.walkabout.GoalSet;
 import uq.coedl.org.walkabout.LocationInterface;
+import uq.coedl.org.walkabout.android.SampleDataProviderAndroid.SampleGoals;
 import uq.coedl.org.walkabout.R;
 
 
@@ -30,7 +32,10 @@ public class MainActivity extends ActionBarActivity
 
         if(!gameManager.isInitialised())
         {
-            gameManager.initialise(null, null);
+            //get sample Goal data
+            GoalSet sampleGoalSet =
+                    new GoalSet(SampleDataProviderAndroid.getGoals(SampleGoals.SINGLE));
+            gameManager.initialise(sampleGoalSet, null);
         }
     }
 
