@@ -33,9 +33,10 @@ public class MainActivity extends ActionBarActivity
         if(!gameManager.isInitialised())
         {
             //get sample Goal data
-            GoalSet sampleGoalSet =
+            final GoalSet sampleGoalSet =
                     new GoalSet(SampleDataProviderAndroid.getGoals(SampleGoals.SINGLE));
-            gameManager.initialise(sampleGoalSet, null);
+            final DirectionCalculatorAndroid directionCalculator = new DirectionCalculatorAndroid();
+            gameManager.initialise(sampleGoalSet, directionCalculator);
         }
     }
 

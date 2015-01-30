@@ -8,7 +8,6 @@ import uq.coedl.org.walkabout.LocationInterface;
  * Class to wrap a pair of geographic X and Y coordinates - Android version
  */
 public class LocationAndroid implements LocationInterface {
-
     private Location location;
 
     public LocationAndroid(Location location) {
@@ -31,5 +30,10 @@ public class LocationAndroid implements LocationInterface {
         } else {
             return location.getLongitude();
         }
+    }
+
+    public Location getLocation()
+    {
+        return location;
     }
 }
