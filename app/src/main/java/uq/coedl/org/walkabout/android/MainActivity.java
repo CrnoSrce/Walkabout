@@ -19,16 +19,11 @@ public class MainActivity extends ActionBarActivity
 {
     private static GameManager gameManager = new GameManager();
 
-    private LocationManager locationManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //initialise the location manager to allow GPS polling
-        initialiseLocationManager();
 
         if(!gameManager.isInitialised())
         {
@@ -63,30 +58,6 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Acquire a reference to the system Location Manager
-     */
-    private void initialiseLocationManager() {
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-    }
-
-    /**
-     * Get coordinates of the last known GPS location of the device
-     * @return object containing coordinates
-     */
-    public LocationInterface getLastKnownLocation() {
-        //first check that the location manager is initialised
-        if (locationManager == null) {
-            initialiseLocationManager();
-        }
-
-        //now poll it to get GPS coordinates
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        //wrap in LocationAndroid object and return
-        return new LocationAndroid(lastKnownLocation);
     }
 
 }
