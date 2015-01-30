@@ -12,15 +12,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.TimerTask;
+
 import uq.coedl.org.walkabout.GameManager;
 import uq.coedl.org.walkabout.GoalSet;
-import uq.coedl.org.walkabout.LocationInterface;
 import uq.coedl.org.walkabout.android.SampleDataProviderAndroid.SampleGoals;
 import uq.coedl.org.walkabout.R;
 
 
 public class MainActivity extends ActionBarActivity {
     private static GameManager gameManager = new GameManager();
+    private static LocationHelper locationHelper = null;
+
+    private TimerTask gameLoopTask = null;
 
     private TextView textStatusReady;
     private TextView textStatusSeeking;
@@ -33,6 +37,14 @@ public class MainActivity extends ActionBarActivity {
     private Button buttonGo;
     private Button buttonNext;
 
+    private class GameTimerTask extends TimerTask
+    {
+        @Override
+        public void run()
+        {
+            
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +53,19 @@ public class MainActivity extends ActionBarActivity {
 
         initialiseUIReferences();
 
-        if (!gameManager.isInitialised()) {
+        if (!gameManager.isInitialised())
+        {
+            if(locationHelper == null)
+            {
+                locationHelper = new LocationHelper((LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
+            }
             //get sample Goal data
             final GoalSet sampleGoalSet =
-                    new GoalSet(SampleDataProviderAndroid.getGoals(SampleGoals.SINGLE));
+                    new GoalSet(SampleDataProviderAndroid.getGoals(SampleGoals.DOUBLE));
             final DirectionCalculatorAndroid directionCalculator = new DirectionCalculatorAndroid();
             gameManager.initialise(sampleGoalSet, directionCalculator);
         }
+        gameLoopTask = new GameTimerTask();
     }
 
 
@@ -138,6 +156,7 @@ public class MainActivity extends ActionBarActivity {
 
         //set content of items which are on
         //@TODO replace constant with resource id
+        final String goalName = "TEMP GOAL";
         textStatusSeeking.setText("Seeking " + goalName);
         textContentDirection.setText("");
         textContentFeedback.setText("");

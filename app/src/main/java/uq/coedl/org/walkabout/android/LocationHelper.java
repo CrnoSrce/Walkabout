@@ -13,11 +13,9 @@ public class LocationHelper {
 
     private LocationManager locationManager;
 
-    /**
-     * Acquire a reference to the system Location Manager
-     */
-    private void initialiseLocationManager() {
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    public LocationHelper(LocationManager locationManager)
+    {
+        this.locationManager = locationManager;
     }
 
     /**
@@ -25,11 +23,6 @@ public class LocationHelper {
      * @return object containing coordinates
      */
     public LocationInterface getLastKnownLocation() {
-        //first check that the location manager is initialised
-        if (locationManager == null) {
-            initialiseLocationManager();
-        }
-
         //now poll it to get GPS coordinates
         Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
