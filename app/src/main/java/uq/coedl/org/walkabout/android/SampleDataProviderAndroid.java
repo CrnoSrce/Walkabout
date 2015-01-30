@@ -36,7 +36,7 @@ public abstract class SampleDataProviderAndroid {
         loc1.setLatitude(153.015651);
         goalList.add(new Goal(new LocationAndroid(loc1), "Lakepaths",
                 "Intersection of two paths on St Lucia campus near lake",
-                "You found the intersection!", null, null));
+                "You found the intersection!", "success_intersection.3ga", "success_intersection.jpg"));
 
         return goalList;
     }
@@ -50,7 +50,7 @@ public abstract class SampleDataProviderAndroid {
         loc1.setLatitude(153.014561);
         goalList.add(new Goal(new LocationAndroid(loc1), "Cafe",
                 "Mr Bean's cafe near Sir James Foots Building",
-                "Help yourself to a coffee", null, null));
+                "Help yourself to a coffee", "success_mrbean.3ga", "success_mrbean.jpg"));
 
         return goalList;
     }
