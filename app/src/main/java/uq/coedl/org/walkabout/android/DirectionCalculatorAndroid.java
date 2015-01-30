@@ -12,7 +12,29 @@ import uq.coedl.org.walkabout.LocationInterface;
 public class DirectionCalculatorAndroid implements DirectionCalculator
 {
     public enum CardinalDirectionReference implements DirectionalReference
-    { NORTH, NOR_EAST, EAST, SOU_EAST, SOUTH, SOU_WEST, WEST, NOR_WEST, FAILED};
+    {
+        NORTH("go_north"),
+        NOR_EAST("go_northeast"),
+        EAST("go_east"),
+        SOU_EAST("go_southeast"),
+        SOUTH("go_south"),
+        SOU_WEST("go_southwest"),
+        WEST("go_west"),
+        NOR_WEST("go_northwest"),
+        FAILED("");
+
+        private String filename;
+
+        CardinalDirectionReference(final String filename)
+        {
+            this.filename = filename;
+        }
+
+        public String getFilename()
+        {
+            return filename;
+        }
+    };
 
     @Override
     public DirectionalReference directionBetween(LocationInterface fromLocationInterface, LocationInterface toLocationInterface)
@@ -45,5 +67,5 @@ public class DirectionCalculatorAndroid implements DirectionCalculator
         return result;
     }
 
-    public int getNumDirections() { return CardinalDirectionReference.values().length-1; }
+    public static int getNumDirections() { return CardinalDirectionReference.values().length-1; }
 }

@@ -1,7 +1,7 @@
 package uq.coedl.org.walkabout.android;
 
 import android.content.Context;
-import android.location.Location;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
     private static LocationHelper locationHelper = null;
 
     private TimerTask gameLoopTask = null;
+    //private SoundHandle[] directionSoundHandles = new SoundHandle[DirectionCalculatorAndroid.getNumDirections()];
 
     private TextView textStatusReady;
     private TextView textStatusSeeking;
@@ -42,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void run()
         {
-            
+
         }
     }
 
@@ -186,5 +188,40 @@ public class MainActivity extends ActionBarActivity {
         buttonGo = (Button) findViewById(R.id.buttonGo);
         buttonNext = (Button) findViewById(R.id.buttonNext);
     }
+
+//    private void setupSounds()
+//    {
+//        final Resources res = getResources();
+//        for(int i=0; i<DirectionCalculatorAndroid.getNumDirections(); ++i)
+//        {
+//            directionSoundHandles[i] =
+//                    res.getIdentifier(DirectionCalculatorAndroid.CardinalDirectionReference.values()[i].getFilename(),
+//                                      "raw", "uq.coedl.org.walkabout")
+//        }
+//
+//        headwordAudioResId = res.getIdentifier((String)dictionaryEntry.getHeadword(), "raw", "com.sassysoft.bininjgunwokdictionary");
+//        new LoadSoundTask().execute(this);
+//        final ImageButton playSoundButton = (ImageButton)findViewById(R.id.fullEntryPlaySoundImageButton);
+//        if(headwordAudioResId != 0)
+//        {
+//            playSoundButton.setClickable(true);
+//        }
+//        else
+//        {
+//            playSoundButton.setClickable(false);
+//        }
+//        playSoundButton.setOnClickListener(new View.OnClickListener()
+//        {
+//            public void onClick(View view)
+//            {
+//                if(headwordAudioHandle != null)
+//                {
+//                    soundPool.play(headwordAudioHandle.getHandle(), 1.0f, 1.0f, 0, 0, 1.0f);
+//                }
+//            }
+//        });
+//    }
+
+
 
 }
