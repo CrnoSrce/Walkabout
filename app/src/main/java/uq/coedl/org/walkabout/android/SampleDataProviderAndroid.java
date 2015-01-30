@@ -32,8 +32,8 @@ public abstract class SampleDataProviderAndroid {
         List<Goal> goalList = new ArrayList<Goal>();
 
         Location loc1 = new Location("SampleDataProviderAndroid");
-        loc1.setLongitude(-27.498901);
-        loc1.setLatitude(153.015651);
+        loc1.setLatitude(-27.498901);
+        loc1.setLongitude(153.015651);
         goalList.add(new Goal(new LocationAndroid(loc1), "Lakepaths",
                 "Intersection of two paths on St Lucia campus near lake",
                 "You found the intersection!", "success_intersection.3ga", "success_intersection.jpg"));
@@ -46,8 +46,8 @@ public abstract class SampleDataProviderAndroid {
         List<Goal> goalList = goalSingle();
 
         Location loc1 = new Location("SampleDataProviderAndroid");
-        loc1.setLongitude(-27.500474);
-        loc1.setLatitude(153.014561);
+        loc1.setLatitude(-27.500474);
+        loc1.setLongitude(153.014561);
         goalList.add(new Goal(new LocationAndroid(loc1), "Cafe",
                 "Mr Bean's cafe near Sir James Foots Building",
                 "Help yourself to a coffee", "success_mrbean.3ga", "success_mrbean.jpg"));
