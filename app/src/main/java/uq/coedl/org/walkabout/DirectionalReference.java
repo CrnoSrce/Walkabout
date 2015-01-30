@@ -5,4 +5,5 @@ package uq.coedl.org.walkabout;
  */
 public interface DirectionalReference
 {
+    public String getName();
 }

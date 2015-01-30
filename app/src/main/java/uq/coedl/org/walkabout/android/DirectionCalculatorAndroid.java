@@ -34,6 +34,7 @@ public class DirectionCalculatorAndroid implements DirectionCalculator
         {
             return filename;
         }
+        public String getName() { return name(); }
     };
 
     @Override

@@ -1,8 +1,10 @@
 package uq.coedl.org.walkabout.android;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.SoundPool;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,19 +15,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
 import java.util.TimerTask;
 
+import uq.coedl.org.walkabout.DirectionalReference;
 import uq.coedl.org.walkabout.GameManager;
 import uq.coedl.org.walkabout.GoalSet;
 import uq.coedl.org.walkabout.android.SampleDataProviderAndroid.SampleGoals;
 import uq.coedl.org.walkabout.R;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements SoundLoaderTask.LoadSoundContext
+{
+    private static final long NUM_SECONDS_BETWEEN_UPDATES = 5*1000; // = 5 secs
+
     private static GameManager gameManager = new GameManager();
     private static LocationHelper locationHelper = null;
+    private GoalSet sampleGoalSet = null;
+    private Map<String, SoundHandle> soundsMap = new HashMap<>();
 
     private TimerTask gameLoopTask = null;
+    private SoundHandle[] directionSoundHandles = new SoundHandle[DirectionCalculatorAndroid.getNumDirections()];
+    private Timer timer = new Timer();
 
     private TextView textStatusReady;
     private TextView textStatusSeeking;
@@ -37,11 +50,17 @@ public class MainActivity extends ActionBarActivity {
 
     private Button buttonGo;
     private Button buttonNext;
+    private SoundPool soundPool = null;
 
     private class GameTimerTask extends TimerTask {
         @Override
-        public void run() {
-
+        public void run()
+        {
+            DirectionalReference directionalReference =
+                    gameManager.updateDirectionalReference(sampleGoalSet.getWaypoint(1));
+            textContentDirection.setText(directionalReference.toString());
+            final SoundHandle soundHandle = soundsMap.get(directionalReference.getName());
+            soundPool.play(soundHandle.getHandle(), 1.0f, 1.0f, 0, 0, 1.0f);
         }
     }
 
@@ -57,12 +76,13 @@ public class MainActivity extends ActionBarActivity {
                 locationHelper = new LocationHelper((LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
             }
             //get sample Goal data
-            final GoalSet sampleGoalSet =
-                    new GoalSet(SampleDataProviderAndroid.getGoals(SampleGoals.DOUBLE));
+            sampleGoalSet = new GoalSet(SampleDataProviderAndroid.getGoals(SampleGoals.DOUBLE));
             final DirectionCalculatorAndroid directionCalculator = new DirectionCalculatorAndroid();
             gameManager.initialise(sampleGoalSet, directionCalculator);
+            setupSounds();
         }
         gameLoopTask = new GameTimerTask();
+        timer.schedule(gameLoopTask, 0, NUM_SECONDS_BETWEEN_UPDATES);
     }
 
 
@@ -223,4 +243,31 @@ public class MainActivity extends ActionBarActivity {
         buttonNext = (Button) findViewById(R.id.buttonNext);
     }
 
+    private void setupSounds()
+    {
+        final Resources res = getResources();
+        for (int i = 0; i < DirectionCalculatorAndroid.getNumDirections(); ++i)
+        {
+            final DirectionCalculatorAndroid.CardinalDirectionReference currentDirection =
+                    DirectionCalculatorAndroid.CardinalDirectionReference.values()[i];
+            directionSoundHandles[i] =
+                    new SoundHandle(currentDirection.name(), res.getIdentifier(currentDirection.getFilename(),
+                                    "raw", "uq.coedl.org.walkabout"));
+            soundsMap.put(currentDirection.name(), directionSoundHandles[i]);
+        }
+        SoundLoaderTask soundLoadTask = new SoundLoaderTask(this, directionSoundHandles);
+        soundLoadTask.execute();
+    }
+
+    @Override
+    public Context getContext()
+    {
+        return null;
+    }
+
+    @Override
+    public void setSoundPool(SoundPool soundPool)
+    {
+        this.soundPool = soundPool;
+    }
 }
