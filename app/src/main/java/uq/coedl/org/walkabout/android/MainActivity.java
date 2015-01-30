@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,12 +38,10 @@ public class MainActivity extends ActionBarActivity {
     private Button buttonGo;
     private Button buttonNext;
 
-    private class GameTimerTask extends TimerTask
-    {
+    private class GameTimerTask extends TimerTask {
         @Override
-        public void run()
-        {
-            
+        public void run() {
+
         }
     }
 
@@ -53,10 +52,8 @@ public class MainActivity extends ActionBarActivity {
 
         initialiseUIReferences();
 
-        if (!gameManager.isInitialised())
-        {
-            if(locationHelper == null)
-            {
+        if (!gameManager.isInitialised()) {
+            if (locationHelper == null) {
                 locationHelper = new LocationHelper((LocationManager) this.getSystemService(Context.LOCATION_SERVICE));
             }
             //get sample Goal data
@@ -122,8 +119,8 @@ public class MainActivity extends ActionBarActivity {
 
         //turn on elements required
         textStatusSeeking.setVisibility(View.VISIBLE);
-        textContentDirection.setVisibility(View.INVISIBLE);
-        textContentFeedback.setVisibility(View.INVISIBLE);
+        textContentDirection.setVisibility(View.VISIBLE);
+        textContentFeedback.setVisibility(View.VISIBLE);
 
         //set content of items which are on
         //@TODO replace constant with resource id
@@ -136,32 +133,72 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onGameUpdate(String direction, String directionAudio, String feedback, String feedbackAudio) {
+        if (direction != null) {
+            textContentDirection.setText(direction);
+        }
+        if (directionAudio != null) {
+            try {
+                //@TODO
+            } catch (Exception e) {
+                //unable to play the direction audio
+                Log.e("onGameUpdate", "Unable to play direction audio", e);
+            }
+        }
 
+        if (feedback != null) {
+            textContentDirection.setText(feedback);
+        }
+        if (feedbackAudio != null) {
+            try {
+                //@TODO
+            } catch (Exception e) {
+                //unable to play the feedback audio
+                Log.e("onGameUpdate", "Unable to play feedback audio", e);
+            }
+        }
     }
 
     //@TODO fix these
     public void onSuccess(String successMessage, String successImage, String successAudio) {
+        //stop the periodic update
+        //@TODO maybe this should go in another method
+        endPeriodicUpdate();
+
         //turn off elements not required
         textStatusReady.setVisibility(View.INVISIBLE);
-        textStatusSuccess.setVisibility(View.INVISIBLE);
+        textStatusSeeking.setVisibility(View.INVISIBLE);
         textContentGoalname.setVisibility(View.INVISIBLE);
-        imageContentSuccess.setVisibility(View.INVISIBLE);
-        buttonGo.setVisibility(View.INVISIBLE);
-        buttonNext.setVisibility(View.INVISIBLE);
-
-        //turn on elements required
-        textStatusSeeking.setVisibility(View.VISIBLE);
         textContentDirection.setVisibility(View.INVISIBLE);
         textContentFeedback.setVisibility(View.INVISIBLE);
+        buttonGo.setVisibility(View.INVISIBLE);
+
+        //turn on elements required
+        textStatusSuccess.setVisibility(View.VISIBLE);
+        imageContentSuccess.setVisibility(View.VISIBLE);
+        buttonNext.setVisibility(View.VISIBLE);
 
         //set content of items which are on
-        //@TODO replace constant with resource id
-        final String goalName = "TEMP GOAL";
-        textStatusSeeking.setText("Seeking " + goalName);
-        textContentDirection.setText("");
-        textContentFeedback.setText("");
+        textStatusSuccess.setText(successMessage);
+        try {
+            int resourceID = getResources().getIdentifier(successImage, "drawable", getPackageName());
+            imageContentSuccess.setImageResource(resourceID);
+        } catch (Exception e) {
+            //unable to set the success image
+            Log.e("onSuccess", "Unable to set success image", e);
+        }
+
+        //play the success audio if any
+        try {
+            //@TODO
+        } catch (Exception e) {
+            //unable to play the success audio
+            Log.e("onSuccess", "Unable to play success audio", e);
+        }
     }
 
+    /**
+     * @TODO
+     */
     public void onFailure() {
 
     }
