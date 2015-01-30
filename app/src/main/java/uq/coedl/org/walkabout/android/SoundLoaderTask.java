@@ -36,7 +36,10 @@ public class SoundLoaderTask extends AsyncTask<Void, Void, Void>
 
             for(SoundHandle soundHandle : soundHandles)
             {
-                soundHandle.setHandle(soundPool.load(loadSoundContext.getContext(), soundHandle.getResId(), 1));
+                if(loadSoundContext.getContext() != null)
+                {
+                    soundHandle.setHandle(soundPool.load(loadSoundContext.getContext(), soundHandle.getResId(), 1));
+                }
             }
         }
         return null;

@@ -2,6 +2,7 @@ package uq.coedl.org.walkabout.android;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.location.Location;
 import android.location.LocationManager;
 import android.media.SoundPool;
 import android.support.v7.app.ActionBarActivity;
@@ -22,13 +23,14 @@ import java.util.TimerTask;
 import uq.coedl.org.walkabout.DirectionalReference;
 import uq.coedl.org.walkabout.GameManager;
 import uq.coedl.org.walkabout.GoalSet;
+import uq.coedl.org.walkabout.LocationInterface;
 import uq.coedl.org.walkabout.android.SampleDataProviderAndroid.SampleGoals;
 import uq.coedl.org.walkabout.R;
 
 
 public class MainActivity extends ActionBarActivity implements SoundLoaderTask.LoadSoundContext, TextUpdater
 {
-    private static final long NUM_SECONDS_BETWEEN_UPDATES = 5*1000; // = 5 secs
+    private static final long NUM_MILLISECONDS_BETWEEN_UPDATES = 5*1000; // = 5 secs
 
     private static GameManager gameManager = new GameManager();
     private static LocationHelper locationHelper = null;
@@ -45,6 +47,7 @@ public class MainActivity extends ActionBarActivity implements SoundLoaderTask.L
     private TextView textContentGoalname;
     private TextView textContentDirection;
     private String nextDirection = "WAITING";
+    private String lastLocation = "(Waiting for GPS)";
     private TextView textContentFeedback;
     private ImageView imageContentSuccess;
 
@@ -56,6 +59,21 @@ public class MainActivity extends ActionBarActivity implements SoundLoaderTask.L
     public void updateText(final String newText)
     {
         nextDirection = newText;
+    }
+
+    @Override
+    public void updateLocation(LocationInterface location)
+    {
+        lastLocation = "(Waiting for GPS...)";
+        LocationAndroid locationAndroid = (LocationAndroid) location;
+        if(locationAndroid != null)
+        {
+            final Location gpsLocation = locationAndroid.getLocation();
+            if(gpsLocation != null)
+            {
+                lastLocation = "(" + gpsLocation.getLatitude() + ", " + gpsLocation.getLongitude() + ")";
+            }
+        }
     }
 
     private class GameTimerTask extends TimerTask
@@ -70,13 +88,17 @@ public class MainActivity extends ActionBarActivity implements SoundLoaderTask.L
         @Override
         public void run()
         {
-            DirectionalReference directionalReference =
-                    gameManager.updateDirectionalReference(sampleGoalSet.getWaypoint(1));
-            textUpdater.updateText(directionalReference.toString());
-            final SoundHandle soundHandle = soundsMap.get(directionalReference.getName());
-            if(soundPool != null)
+            if((sampleGoalSet != null) && (gameManager != null) && (locationHelper != null))
             {
-                soundPool.play(soundHandle.getHandle(), 1.0f, 1.0f, 0, 0, 1.0f);
+                final LocationInterface location = locationHelper.getLastKnownLocation();
+                final DirectionalReference directionalReference = gameManager.updateDirectionalReference(location);
+                textUpdater.updateText(directionalReference.toString());
+                textUpdater.updateLocation(location);
+                final SoundHandle soundHandle = soundsMap.get(directionalReference.getName());
+                if ((soundPool != null) && (soundHandle != null))
+                {
+                    soundPool.play(soundHandle.getHandle(), 1.0f, 1.0f, 0, 0, 1.0f);
+                }
             }
         }
     }
@@ -99,13 +121,14 @@ public class MainActivity extends ActionBarActivity implements SoundLoaderTask.L
             setupSounds();
         }
         gameLoopTask = new GameTimerTask(this);
-        timer.schedule(gameLoopTask, 0, NUM_SECONDS_BETWEEN_UPDATES);
+        timer.schedule(gameLoopTask, 0, NUM_MILLISECONDS_BETWEEN_UPDATES);
         runOnUiThread(new Runnable()
         {
             @Override
             public void run()
             {
                 textContentDirection.setText(nextDirection);
+                textContentFeedback.setText(lastLocation);
             }
         });
     }
