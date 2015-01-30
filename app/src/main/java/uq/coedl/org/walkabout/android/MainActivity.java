@@ -60,7 +60,10 @@ public class MainActivity extends ActionBarActivity implements SoundLoaderTask.L
                     gameManager.updateDirectionalReference(sampleGoalSet.getWaypoint(1));
             textContentDirection.setText(directionalReference.toString());
             final SoundHandle soundHandle = soundsMap.get(directionalReference.getName());
-            soundPool.play(soundHandle.getHandle(), 1.0f, 1.0f, 0, 0, 1.0f);
+            if(soundPool != null)
+            {
+                soundPool.play(soundHandle.getHandle(), 1.0f, 1.0f, 0, 0, 1.0f);
+            }
         }
     }
 
@@ -262,7 +265,7 @@ public class MainActivity extends ActionBarActivity implements SoundLoaderTask.L
     @Override
     public Context getContext()
     {
-        return null;
+        return this;
     }
 
     @Override
